@@ -7,6 +7,7 @@ FastAPI 应用入口模块
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.search import router as search_router
 from app.config import settings
 
 app = FastAPI(title=settings.app_name)
@@ -19,6 +20,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 注册搜索 API 路由
+app.include_router(search_router)
 
 
 @app.get("/api/v1/health")
