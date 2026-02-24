@@ -2,13 +2,19 @@
 FastAPI 应用入口模块
 
 提供应用实例初始化、CORS 中间件配置以及健康检查接口。
+启动时自动创建数据库表结构。
 """
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.community import router as community_router
 from app.api.search import router as search_router
 from app.config import settings
+from app.models.database import Base, engine
+
+# 自动创建数据库表（如果尚未存在）
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title=settings.app_name)
 
@@ -21,8 +27,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 注册搜索 API 路由
+# 注册路由
 app.include_router(search_router)
+app.include_router(community_router)
 
 
 @app.get("/api/v1/health")
