@@ -132,7 +132,7 @@ async def test_beike_parse_community_detail():
         assert result["property_fee"] == 3.5
         assert result["build_year"] == 2010
         assert result["volume_ratio"] == 2.5
-        assert result["green_ratio"] == 35.0
+        assert result["green_ratio"] == 0.35
         assert result["developer"] == "绿城中国"
         assert result["total_units"] == 3000
         assert result["parking_ratio"] == "1:1.5"

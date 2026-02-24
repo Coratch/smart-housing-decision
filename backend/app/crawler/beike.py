@@ -127,7 +127,11 @@ class BeikeCrawler(BaseCrawler):
             elif field_name == "property_fee":
                 result[field_name] = self._parse_float(value)
             elif field_name in ("volume_ratio", "green_ratio"):
-                result[field_name] = self._parse_float(value)
+                parsed = self._parse_float(value)
+                # 百分比字符串（如"35%"）需要除以100转为小数（0.35）
+                if parsed is not None and "%" in value:
+                    parsed = parsed / 100
+                result[field_name] = parsed
             elif field_name in ("build_year", "total_units"):
                 result[field_name] = self._parse_int(value)
 

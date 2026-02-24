@@ -1,8 +1,13 @@
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
+
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL: API_BASE_URL,
   timeout: 30000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export interface WeightsConfig {
