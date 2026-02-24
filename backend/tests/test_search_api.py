@@ -2,17 +2,13 @@
 搜索 API 测试模块
 
 覆盖基础搜索、按区域搜索、自定义权重搜索以及默认权重配置查询接口。
-使用不存在于数据库中的城市验证空结果场景，同时验证有数据时的正常返回。
+所有测试使用 conftest.py 提供的内存数据库和预填充数据，无需外部种子脚本。
 """
 
 from fastapi.testclient import TestClient
 
-from app.main import app
 
-client = TestClient(app)
-
-
-def test_search_returns_empty_for_no_data():
+def test_search_returns_empty_for_no_data(client: TestClient):
     """无数据城市搜索应返回空结果"""
     response = client.post(
         "/api/v1/search",
@@ -28,7 +24,7 @@ def test_search_returns_empty_for_no_data():
     assert data["communities"] == []
 
 
-def test_search_with_district():
+def test_search_with_district(client: TestClient):
     """指定区域搜索应正常返回"""
     response = client.post(
         "/api/v1/search",
@@ -45,7 +41,7 @@ def test_search_with_district():
     assert data["communities"] == []
 
 
-def test_search_with_custom_weights():
+def test_search_with_custom_weights(client: TestClient):
     """自定义权重搜索应正常返回"""
     response = client.post(
         "/api/v1/search",
@@ -68,7 +64,7 @@ def test_search_with_custom_weights():
     assert data["communities"] == []
 
 
-def test_search_returns_results_with_data():
+def test_search_returns_results_with_data(client: TestClient):
     """有数据时搜索应返回包含评分和标签的结果"""
     response = client.post(
         "/api/v1/search",
@@ -90,7 +86,7 @@ def test_search_returns_results_with_data():
     assert community["score"] > 0
 
 
-def test_get_default_weights():
+def test_get_default_weights(client: TestClient):
     """获取默认权重配置应返回预设值"""
     response = client.get("/api/v1/config/weights")
     assert response.status_code == 200
